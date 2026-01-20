@@ -1,0 +1,63 @@
+### Exemplo de uso da API Control Position Shelf - NestJS
+
+### 1. Verificar status atual
+GET http://localhost:3000/status
+
+### 2. Executar sequência de movimentos
+POST http://localhost:3000/executar
+Content-Type: application/json
+
+{
+  "passos": [
+    {
+      "andar": 1,
+      "posicao": 2,
+      "movimento": "P"
+    },
+    {
+      "andar": 2,
+      "posicao": 3,
+      "movimento": "L"
+    }
+  ]
+}
+
+### 3. Executar movimento simples sem ação
+POST http://localhost:3000/executar
+Content-Type: application/json
+
+{
+  "passos": [
+    {
+      "andar": 0,
+      "posicao": 0
+    }
+  ]
+}
+
+### 4. Exemplo com múltiplos passos
+POST http://localhost:3000/executar
+Content-Type: application/json
+
+{
+  "passos": [
+    {
+      "andar": 1,
+      "posicao": 1
+    },
+    {
+      "andar": 1,
+      "posicao": 2,
+      "movimento": "P"
+    },
+    {
+      "andar": 2,
+      "posicao": 4,
+      "movimento": "L"
+    },
+    {
+      "andar": 0,
+      "posicao": 0
+    }
+  ]
+}
