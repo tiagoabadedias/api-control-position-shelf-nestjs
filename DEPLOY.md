@@ -1,33 +1,37 @@
 # Deploy no Vercel
 
-Este projeto está configurado para deploy automático no Vercel.
+Este projeto está configurado para deploy automático no Vercel como serverless function.
 
-## Configuração
+## Estrutura para Vercel
 
-O arquivo `vercel.json` está configurado para:
-- Detectar a aplicação como Node.js
-- Usar o diretório `dist` como output
-- Rotear todas as requisições para `dist/main.js`
+A aplicação foi estruturada especificamente para o Vercel:
+- `api/index.ts` - Entry point para serverless function
+- `vercel.json` - Configuração do Vercel
+- `src/` - Código fonte da aplicação NestJS
 
-## Scripts
+## Como funciona
 
-- `npm run build` - Compila a aplicação para produção
-- `npm run start` - Inicia a aplicação compilada
-- `npm run vercel-build` - Script específico para o build no Vercel
-
-## Variáveis de Ambiente
-
-Certifique-se de configurar as seguintes variáveis no Vercel (se necessário):
-- `NODE_ENV=production`
+O Vercel irá:
+1. Detectar o arquivo `api/index.ts` como serverless function
+2. Instalar as dependências automaticamente
+3. Compilar o TypeScript
+4. Rotear todas as requisições para a function
 
 ## Deploy
 
-1. Conecte seu repositório ao Vercel
-2. O Vercel detectará automaticamente as configurações
-3. O deploy será feito automaticamente a cada push
+1. Faça commit das mudanças
+2. Push para o repositório
+3. O Vercel fará deploy automaticamente
 
-## Endpoints da API
+## Testando após deploy
 
-Após o deploy, os endpoints estarão disponíveis em:
+Os endpoints estarão disponíveis em:
 - `POST https://your-app.vercel.app/executar`
 - `GET https://your-app.vercel.app/status`
+
+## Troubleshooting
+
+Se receber erro 404:
+1. Verifique se o `vercel.json` está configurado corretamente
+2. Certifique-se que o `api/index.ts` existe
+3. Verifique os logs no dashboard do Vercel

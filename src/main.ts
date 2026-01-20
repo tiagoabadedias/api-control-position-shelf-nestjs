@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -8,21 +9,29 @@ async function bootstrap() {
   app.enableCors();
   
   // Configurar validação global
-  app.useGlobalPipes();
+  app.useGlobalPipes(new ValidationPipe({
+    transform: true,
+    whitelist: true,
+  }));
   
-  // Porta padrão 3000, mas pode ser alterada via ENV (importante para Vercel)
-  const port = process.env.PORT || 3000;
+  // Para serverless functions no Vercel, precisamos exportar o handler
+  await app.init();
   
-  await app.listen(port);
-  
-  
-  // Log apenas em desenvolvimento
-  if (process.env.NODE_ENV !== 'production') {
-    console.log(`[NestJS] API de controle de posição de prateleira rodando na porta ${port}`);
-    console.log(`[NestJS] Endpoints disponíveis:`);
-    console.log(`[NestJS] POST http://localhost:${port}/executar`);
-    console.log(`[NestJS] GET  http://localhost:${port}/status`);
-  }
+  return app;
 }
 
-bootstrap();
+// Para desenvolvimento local
+if (require.main === module) {
+  bootstrap().then(app => {
+    const port = process.env.PORT || 3000;
+    app.listen(port);
+    console.log(`[NestJS] API rodando na porta ${port}`);
+  });
+}
+
+// Export para Vercel
+export default async (req: any, res: any) => {
+  const app = await bootstrap();
+  const httpAdapter = app.getHttpAdapter();
+  return httpAdapter.getInstance()(req, res);
+};
