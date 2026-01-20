@@ -15,6 +15,7 @@ async function bootstrap() {
   
   await app.listen(port);
   
+  
   // Log apenas em desenvolvimento
   if (process.env.NODE_ENV !== 'production') {
     console.log(`[NestJS] API de controle de posição de prateleira rodando na porta ${port}`);
